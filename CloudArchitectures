@@ -1,0 +1,111 @@
+☁️ Bulut Mimarileri ve Mikroservisler: Modern Yazılım Geliştirme Yaklaşımları
+🎯 Giriş
+Günümüzde yazılım uygulamaları; yüksek kullanıcı sayısı, hızlı geliştirme döngüleri, sürekli güncellenebilirlik ve sistem güvenilirliği gibi ihtiyaçlara cevap verecek şekilde tasarlanmalıdır. Bu gereksinimler doğrultusunda geleneksel monolitik yapılardan uzaklaşılıp bulut mimarileri ve mikroservis tabanlı yaklaşımlar tercih edilmektedir. Bu yazıda, bu iki önemli kavramın ne olduğunu, nasıl çalıştığını ve neden bu kadar değerli olduklarını açıklayacağız.
+
+☁️ 1. Bulut Mimarileri Nedir?
+🔹 Tanım:
+Bulut mimarisi, uygulamaların fiziksel sunucular yerine internet üzerinden hizmet sunan bulut sağlayıcılar (AWS, Azure, Google Cloud gibi) üzerinde çalışmasını sağlayan sistem yapısıdır.
+
+🔹 Temel Kavramlar:
+✅ IaaS (Infrastructure as a Service)
+Temel altyapı hizmetlerini sanallaştırır.
+
+Örnek: AWS EC2, Azure Virtual Machines
+
+Kullanıcı; işletim sistemini, veritabanını ve uygulamayı kendi kurar.
+
+✅ PaaS (Platform as a Service)
+Uygulama geliştirmek için hazır platformlar sunar.
+
+Geliştirici sadece uygulama kodunu yazar.
+
+Örnek: Heroku, Google App Engine
+
+✅ SaaS (Software as a Service)
+Kullanıma hazır yazılımlar sunar.
+
+Kurulum, bakım kullanıcıya ait değildir.
+
+Örnek: Gmail, Google Docs, Zoom
+
+✅ SECaaS (Security as a Service)
+Güvenlik hizmetleri bulut üzerinden verilir.
+
+Örnek: Cloudflare, AWS WAF (Web Application Firewall)
+
+🔹 Bulut Mimarilerinin Avantajları:
+Esneklik: Gerektiğinde kaynakları otomatik artırabilir veya azaltabilirsin.
+
+Ölçeklenebilirlik: Yatay ve dikey scaling ile trafik artışlarına rahatça uyum sağlar.
+
+Yüksek Erişilebilirlik: Verilerin ve uygulaman birçok bölgede yedeklenir.
+
+Maliyet Verimliliği: Kullanılan kadar ödeme yapılır.
+
+🧩 2. Mikroservis Mimarisi Nedir?
+🔹 Tanım:
+Mikroservis mimarisi, büyük uygulamaların küçük, bağımsız çalışan servisler halinde inşa edilmesidir. Her servis tek bir işlevi yerine getirir ve kendi başına geliştirilebilir, dağıtılabilir, güncellenebilir.
+
+🔹 Mikroservislerin Temel Özellikleri:
+Bağımsız Geliştirme ve Dağıtım: Her servis ayrı deploy edilebilir.
+
+Tek Sorumluluk İlkesi: Her servis belirli bir iş mantığını yönetir.
+
+Farklı Teknolojilerle Yazılabilir: Bir servis Python, diğeri Node.js olabilir.
+
+Servisler Arası İletişim: Genellikle REST API veya gRPC ile yapılır.
+
+Kendi Veritabanı: Her mikroservisin kendi veri deposu olabilir.
+
+🔹 Mikroservislerin Avantajları:
+Çevik geliştirme: Küçük ekipler farklı servisler üzerinde paralel çalışabilir.
+
+Hata İzolasyonu: Bir servisteki hata tüm sistemi etkilemez.
+
+Kolay ölçeklenebilirlik: Yalnızca ihtiyaç duyulan servis ölçeklenir.
+
+DevOps uyumluluğu: Otomasyon ve CI/CD süreçleriyle uyumludur.
+
+🔹 Zorlukları:
+Komplekslik: Servis sayısı arttıkça yönetim zorlaşır.
+
+Servisler arası iletişim ve hata yönetimi ekstra dikkat ister.
+
+Gözlemlenebilirlik (Observability): Log, metrik ve izleme sistemleri gerekir.
+
+🔧 3. Mikroservislerin Tipik Bileşenleri:
+
+Bileşen	Görevi
+API Gateway	Tüm istemci isteklerini yönlendirir
+Her mikroservis	Bağımsız iş mantığı içerir
+Service Registry	Servisleri tanır ve bulur
+Load Balancer	Yük dağılımını sağlar
+Veritabanı (DB)	Servis bazlı veri depoları
+Mesaj Kuyruğu	Asenkron iletişim (RabbitMQ, Kafka)
+Monitoring & Logging	İzleme ve hata analizi
+📦 4. Bulut ve Mikroservis Uyumunun Gücü
+Bulut ortamları, mikroservis yapılarla mükemmel uyum sağlar çünkü:
+
+Her mikroservis bir container içinde çalıştırılabilir (Docker).
+
+Kubernetes gibi sistemlerle bu container’lar yönetilebilir.
+
+Servisler bağımsız şekilde otomatik ölçeklenebilir.
+
+Yük dengeleme, loglama, güvenlik gibi servisler bulutta hazır gelir.
+
+🛒 5. Gerçek Hayattan Örnek: E-Ticaret Sistemi
+Bir e-ticaret uygulaması mikroservis mimarisinde aşağıdaki gibi yapılandırılabilir:
+
+
+Mikroservis	Görev
+User Service	Üyelik, kimlik doğrulama
+Product Service	Ürün bilgileri ve envanter yönetimi
+Order Service	Sipariş işlemleri
+Payment Service	Ödeme sistemleri entegrasyonu
+Cart Service	Alışveriş sepeti
+Notification Service	E-posta / SMS bildirimi
+Tüm bu servisler, bulut ortamında container olarak çalıştırılır. Kullanıcıdan gelen istekler API Gateway üzerinden ilgili mikroservislere yönlendirilir. Böylece sistem esnek, ölçeklenebilir ve dayanıklı olur.
+
+🎓 Sonuç
+Bulut mimarileri, modern yazılım altyapılarının esnekliğini ve ölçeklenebilirliğini sağlarken; mikroservisler, uygulamaların daha modüler, test edilebilir ve yönetilebilir hale gelmesini sağlar. Özellikle e-ticaret, sosyal medya, oyun ve SaaS platformları gibi dinamik sistemlerde bu yaklaşımlar artık birer zorunluluk haline gelmiştir.
