@@ -1,0 +1,57 @@
+Design pattern (tasarım deseni), yazılım geliştirme sırasında karşılaşılan yaygın problemler için yeniden kullanılabilir, genel çözümler sunan şablonlardır.
+Bu desenler, kodun daha anlaşılır, bakımı kolay ve yeniden kullanılabilir olmasını sağlar.
+
+🔷 1. Creational Patterns (Yaratımsal Desenler)
+Amaç: Nesnelerin oluşturulma sürecini kontrol etmek.
+
+Singleton – Sadece tek bir örneği olan sınıf sağlar.
+
+Factory Method – Alt sınıfların hangi nesneyi oluşturacağına karar vermesini sağlar.
+
+Abstract Factory – İlgili nesne ailelerini oluşturur, alt sınıfları belirtmeden.
+
+Builder – Karmaşık nesneleri adım adım oluşturur.
+
+Prototype – Var olan nesneden klonlama ile yeni nesne oluşturur.
+
+🔷 2. Structural Patterns (Yapısal Desenler)
+Amaç: Sınıflar ve nesneler arasında büyük yapılar kurmak.
+
+Adapter – Uyumsuz arayüzleri birbirine uyumlu hale getirir.
+
+Bridge – Soyutlama ile implementasyonu birbirinden ayırır.
+
+Composite – Nesne gruplarını tek bir nesne gibi işler (ağaç yapısı gibi).
+
+Decorator – Nesneye dinamik olarak yeni davranışlar ekler.
+
+Facade – Karmaşık alt sistemlere basit bir arayüz sağlar.
+
+Flyweight – Çok sayıda nesneyi verimli şekilde yönetmek için paylaşım yapar.
+
+Proxy – Başka bir nesneye erişimi kontrol eden vekil nesne sağlar.
+
+🔷 3. Behavioral Patterns (Davranışsal Desenler)
+Amaç: Nesneler arası iletişim ve sorumluluk paylaşımını düzenlemek.
+
+Chain of Responsibility – Talep, zincir üzerindeki nesnelere sırayla iletilir.
+
+Command – Bir isteği nesne olarak kapsüller.
+
+Interpreter – Bir dilin gramerini temsil eder ve yorumlar.
+
+Iterator – Bir koleksiyondaki öğelere sırayla erişim sağlar.
+
+Mediator – Nesneler arasındaki iletişimi merkezi bir yapı aracılığıyla yapar.
+
+Memento – Nesnenin önceki durumunu kaydeder ve geri alır.
+
+Observer – Bir nesne değişince bağlı olanları otomatik bilgilendirir.
+
+State – Nesnenin iç durumu değiştikçe davranışını değiştirir.
+
+Strategy – Bir algoritmanın ailesini tanımlar ve değiştirilebilir hale getirir.
+
+Template Method – İşlem sırasını belirler, alt sınıflar bazı adımları özelleştirir.
+
+Visitor – Nesne yapısında gezinerek, her elemana işlem uygulamak için kullanılır.
