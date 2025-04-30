@@ -1,0 +1,1442 @@
+Aşağıda Python dilinde basit bir Çiftlik Uygulaması örneği oluşturdum. Bu uygulama, bir EnvanterModülü içerir. 
+Bu modül, Tohum ve Alet envanterlerini takip eder. 
+Ayrıca sonunda örnek bir test senaryosu da çalıştırılıyor.
+
+Python Çiftlik Uygulaması
+
+# Tohum sınıfı
+class Tohum:
+    def __init__(self, ad, miktar):
+        self.ad = ad
+        self.miktar = miktar
+        self.kullanilan = 0
+
+    def kullan(self, miktar):
+        if miktar <= self.miktar:
+            self.miktar -= miktar
+            self.kullanilan += miktar
+            print(f"{miktar} adet {self.ad} tohumu kullanıldı.")
+        else:
+            print(f"Yeterli {self.ad} tohumu yok!")
+
+    def __str__(self):
+        return f"{self.ad} - Kalan: {self.miktar}, Kullanılan: {self.kullanilan}"
+
+
+# Alet sınıfı
+class Alet:
+    def __init__(self, ad):
+        self.ad = ad
+        self.kimde = "ben"
+
+    def komsuya_ver(self):
+        self.kimde = "komşu"
+        print(f"{self.ad} komşuya verildi.")
+
+    def geri_al(self):
+        self.kimde = "ben"
+        print(f"{self.ad} geri alındı.")
+
+    def __str__(self):
+        return f"{self.ad} - Şu anda: {self.kimde}"
+
+
+# Envanter Modülü
+class EnvanterModulu:
+    def __init__(self):
+        self.tohumlar = {}
+        self.aletler = {}
+
+    def tohum_ekle(self, tohum: Tohum):
+        self.tohumlar[tohum.ad] = tohum
+
+    def alet_ekle(self, alet: Alet):
+        self.aletler[alet.ad] = alet
+
+    def tohum_kullan(self, ad, miktar):
+        if ad in self.tohumlar:
+            self.tohumlar[ad].kullan(miktar)
+        else:
+            print(f"{ad} tohumu envanterde yok.")
+
+    def alet_ver(self, ad):
+        if ad in self.aletler:
+            self.aletler[ad].komsuya_ver()
+        else:
+            print(f"{ad} aleti envanterde yok.")
+
+    def alet_geri_al(self, ad):
+        if ad in self.aletler:
+            self.aletler[ad].geri_al()
+        else:
+            print(f"{ad} aleti envanterde yok.")
+
+    def durum_goster(self):
+        print("\n--- Tohumlar ---")
+        for tohum in self.tohumlar.values():
+            print(tohum)
+        print("\n--- Aletler ---")
+        for alet in self.aletler.values():
+            print(alet)
+
+
+# Test Senaryosu
+def test_senaryosu():
+    print("=== Çiftlik Uygulaması Testi Başlıyor ===\n")
+    envanter = EnvanterModulu()
+
+    # Tohumlar ekleniyor
+    envanter.tohum_ekle(Tohum("Buğday", 100))
+    envanter.tohum_ekle(Tohum("Mısır", 50))
+
+    # Aletler ekleniyor
+    envanter.alet_ekle(Alet("Tırmık"))
+    envanter.alet_ekle(Alet("Traktör"))
+
+    # Tohum kullanımı
+    envanter.tohum_kullan("Buğday", 30)
+    envanter.tohum_kullan("Mısır", 60)  # yeterli yok
+
+    # Alet paylaşımı
+    envanter.alet_ver("Tırmık")
+    envanter.alet_geri_al("Tırmık")
+
+    # Durum göster
+    envanter.durum_goster()
+    print("\n=== Test Bitti ===")
+
+
+# Çalıştır
+if __name__ == "__main__":
+    test_senaryosu()
+Örnek Çıktı:
+diff
+Kopyala
+Düzenle
+=== Çiftlik Uygulaması Testi Başlıyor ===
+
+30 adet Buğday tohumu kullanıldı.
+Yeterli Mısır tohumu yok!
+Tırmık komşuya verildi.
+Tırmık geri alındı.
+
+--- Tohumlar ---
+Buğday - Kalan: 70, Kullanılan: 30
+Mısır - Kalan: 50, Kullanılan: 0
+
+--- Aletler ---
+Tırmık - Şu anda: ben
+Traktör - Şu anda: ben
+
+=== Test Bitti ===
+İstersen bu yapıya ürün satışı, gübreler ya da hayvanlar gibi yeni modüller de kolayca eklenebilir. Genişletilebilir bir mimariyle yazılmıştır. Yardımcı olayım mı?
+
+
+
+envanter modülünü singleton olarak tekrar tasarlamanı istiyorum
+ChatGPT:
+Elbette! Python'da Singleton tasarım deseni, bir sınıfın sadece tek bir örneği olmasını sağlar. Aşağıda, EnvanterModulu sınıfını Singleton olarak yeniden tasarladım.
+
+Güncellenmiş: Singleton EnvanterModulu
+
+class EnvanterModulu:
+    _instance = None  # Singleton örneği
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(EnvanterModulu, cls).__new__(cls)
+            cls._instance.tohumlar = {}
+            cls._instance.aletler = {}
+        return cls._instance
+
+    def tohum_ekle(self, tohum):
+        self.tohumlar[tohum.ad] = tohum
+
+    def alet_ekle(self, alet):
+        self.aletler[alet.ad] = alet
+
+    def tohum_kullan(self, ad, miktar):
+        if ad in self.tohumlar:
+            self.tohumlar[ad].kullan(miktar)
+        else:
+            print(f"{ad} tohumu envanterde yok.")
+
+    def alet_ver(self, ad):
+        if ad in self.aletler:
+            self.aletler[ad].komsuya_ver()
+        else:
+            print(f"{ad} aleti envanterde yok.")
+
+    def alet_geri_al(self, ad):
+        if ad in self.aletler:
+            self.aletler[ad].geri_al()
+        else:
+            print(f"{ad} aleti envanterde yok.")
+
+    def durum_goster(self):
+        print("\n--- Tohumlar ---")
+        for tohum in self.tohumlar.values():
+            print(tohum)
+        print("\n--- Aletler ---")
+        for alet in self.aletler.values():
+            print(alet)
+Geriye Kalan Kod (Aynı Kalabilir):
+Tohum, Alet ve test_senaryosu() fonksiyonu öncekiyle aynı şekilde kullanılabilir. Tek fark, artık envanter nesnesi şu şekilde oluşturulmalı:
+
+
+envanter = EnvanterModulu()
+Bunu hangi modülde, hangi yerde çağırırsan çağır, hep aynı örneğe erişmiş olursun.
+
+Ekstra Test (İstersen ekle):
+
+envanter1 = EnvanterModulu()
+envanter2 = EnvanterModulu()
+
+print(envanter1 is envanter2)  # True verir, çünkü Singleton
+
+sulama ayarları diye bir modül yazdırmak istiyorum. şu zamanda şu kadar su ver diye ayarlayacak.
+
+“Sulama Ayarları” modülü, her bitkiye belirli bir zaman ve miktar bilgisiyle sulama programı tanımlamak için güzel bir bileşen. 
+Aşağıda bu modül için basit ve genişletilebilir bir yapı oluşturdum.
+
+SulamaAyarlarıModulu – Temel Sürüm
+
+from datetime import datetime, timedelta
+
+class SulamaAyarı:
+    def __init__(self, bitki_adı, zaman: datetime, su_miktari_litre: float):
+        self.bitki_adı = bitki_adı
+        self.zaman = zaman
+        self.su_miktari_litre = su_miktari_litre
+
+    def __str__(self):
+        return f"{self.bitki_adı}: {self.zaman.strftime('%Y-%m-%d %H:%M')} - {self.su_miktari_litre} litre"
+
+class SulamaAyarlarıModulu:
+    def __init__(self):
+        self.ayarlar = []
+
+    def sulama_ekle(self, bitki_adı, zaman: datetime, su_miktari_litre: float):
+        ayar = SulamaAyarı(bitki_adı, zaman, su_miktari_litre)
+        self.ayarlar.append(ayar)
+        print(f"Sulama ayarı eklendi: {ayar}")
+
+    def sulama_listesi(self):
+        print("\n--- Sulama Ayarları ---")
+        for ayar in sorted(self.ayarlar, key=lambda x: x.zaman):
+            print(ayar)
+
+    def guncel_sulamalar(self, simdi: datetime):
+        print(f"\n{simdi.strftime('%Y-%m-%d %H:%M')} itibarıyla yapılması gereken sulamalar:")
+        for ayar in self.ayarlar:
+            if ayar.zaman <= simdi:
+                print(f"{ayar.bitki_adı} sulanmalı ({ayar.su_miktari_litre} litre)")
+
+def sulama_test():
+    from datetime import datetime, timedelta
+
+    sulama_modulu = SulamaAyarlarıModulu()
+
+    simdi = datetime.now()
+    sulama_modulu.sulama_ekle("Domates", simdi + timedelta(minutes=30), 2.5)
+    sulama_modulu.sulama_ekle("Biber", simdi + timedelta(hours=1), 1.5)
+    sulama_modulu.sulama_ekle("Salatalık", simdi - timedelta(minutes=15), 3.0)
+
+    sulama_modulu.sulama_listesi()
+    sulama_modulu.guncel_sulamalar(simdi)
+Örnek Çıktı:
+
+Sulama ayarı eklendi: Domates: 2025-04-30 13:45 - 2.5 litre
+Sulama ayarı eklendi: Biber: 2025-04-30 14:15 - 1.5 litre
+Sulama ayarı eklendi: Salatalık: 2025-04-30 13:00 - 3.0 litre
+
+--- Sulama Ayarları ---
+Salatalık: 2025-04-30 13:00 - 3.0 litre
+Domates: 2025-04-30 13:45 - 2.5 litre
+Biber: 2025-04-30 14:15 - 1.5 litre
+
+2025-04-30 13:30 itibarıyla yapılması gereken sulamalar:
+Salatalık sulanmalı (3.0 litre)
+
+
+iki ayrı bahçe var gibi düşün sulama ayarlarını singelton olacak şekilde tekrar
+
+Güncellenmiş: Singleton ve Çoklu Bahçe Destekli Sulama Modülü
+
+from datetime import datetime
+
+class SulamaAyarı:
+    def __init__(self, bahce_adı, bitki_adı, zaman: datetime, su_miktari_litre: float):
+        self.bahce_adı = bahce_adı
+        self.bitki_adı = bitki_adı
+        self.zaman = zaman
+        self.su_miktari_litre = su_miktari_litre
+
+    def __str__(self):
+        zaman_str = self.zaman.strftime('%Y-%m-%d %H:%M')
+        return f"[{self.bahce_adı}] {self.bitki_adı} - {zaman_str} - {self.su_miktari_litre} litre"
+
+class SulamaAyarlarıModulu:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(SulamaAyarlarıModulu, cls).__new__(cls)
+            cls._instance.ayarlar = []
+        return cls._instance
+
+    def sulama_ekle(self, bahce_adı, bitki_adı, zaman: datetime, su_miktari_litre: float):
+        ayar = SulamaAyarı(bahce_adı, bitki_adı, zaman, su_miktari_litre)
+        self.ayarlar.append(ayar)
+        print(f"Sulama ayarı eklendi: {ayar}")
+
+    def sulama_listesi(self, bahce_filtre=None):
+        print("\n--- Sulama Ayarları ---")
+        for ayar in sorted(self.ayarlar, key=lambda x: x.zaman):
+            if bahce_filtre is None or ayar.bahce_adı == bahce_filtre:
+                print(ayar)
+
+    def guncel_sulamalar(self, simdi: datetime, bahce_filtre=None):
+        print(f"\n{simdi.strftime('%Y-%m-%d %H:%M')} itibarıyla sulanması gereken bitkiler:")
+        for ayar in self.ayarlar:
+            if ayar.zaman <= simdi:
+                if bahce_filtre is None or ayar.bahce_adı == bahce_filtre:
+                    print(f"{ayar.bahce_adı} - {ayar.bitki_adı} ({ayar.su_miktari_litre} litre)")
+Örnek Test Senaryosu
+
+def sulama_test():
+    from datetime import datetime, timedelta
+
+    sulama = SulamaAyarlarıModulu()
+    simdi = datetime.now()
+
+    # Bahçe 1 ve Bahçe 2 için ayarlar
+    sulama.sulama_ekle("Bahçe1", "Domates", simdi + timedelta(minutes=20), 2.0)
+    sulama.sulama_ekle("Bahçe1", "Biber", simdi - timedelta(minutes=10), 1.5)
+    sulama.sulama_ekle("Bahçe2", "Salatalık", simdi - timedelta(hours=1), 3.0)
+    sulama.sulama_ekle("Bahçe2", "Patlıcan", simdi + timedelta(hours=2), 2.5)
+
+    # Tüm bahçelerin listesi
+    sulama.sulama_listesi()
+
+    # Sadece Bahçe1
+    sulama.sulama_listesi("Bahçe1")
+
+    # Şu an itibarıyla sulanması gereken bitkiler (hepsi)
+    sulama.guncel_sulamalar(simdi)
+
+    # Sadece Bahçe2'de şu an sulanması gerekenler
+    sulama.guncel_sulamalar(simdi, "Bahçe2")
+
+
+çiftlik faaliyetleri için bir raporlama sistemi var. faaliyet türüne göre rapor oluşturacağız ürün raporu hayvancılık raporu olacak kodu yaz
+
+Ürün Raporu (tarım, hasat, satış vs.)
+
+Hayvancılık Raporu (hayvan sağlığı, süt üretimi, yem vs.)
+
+Bu raporlama sistemi genişlemeye uygun şekilde tasarlanmıştır.
+
+Faaliyet Sınıfı (Temel Tür)
+
+from datetime import datetime
+
+class Faaliyet:
+    def __init__(self, tarih: datetime, aciklama: str):
+        self.tarih = tarih
+        self.aciklama = aciklama
+
+    def __str__(self):
+        return f"{self.tarih.strftime('%Y-%m-%d')} - {self.aciklama}"
+Ürün ve Hayvancılık Faaliyetleri
+
+class UrunFaaliyeti(Faaliyet):
+    def __init__(self, tarih, urun_adi, miktar_kg, aciklama):
+        super().__init__(tarih, aciklama)
+        self.urun_adi = urun_adi
+        self.miktar_kg = miktar_kg
+
+    def __str__(self):
+        return f"[Ürün] {super().__str__()} | Ürün: {self.urun_adi}, Miktar: {self.miktar_kg} kg"
+
+class HayvancilikFaaliyeti(Faaliyet):
+    def __init__(self, tarih, hayvan_turu, islem, aciklama):
+        super().__init__(tarih, aciklama)
+        self.hayvan_turu = hayvan_turu
+        self.islem = islem
+
+    def __str__(self):
+        return f"[Hayvancılık] {super().__str__()} | Hayvan: {self.hayvan_turu}, İşlem: {self.islem}"
+Raporlama Sistemi
+
+class RaporlamaSistemi:
+    def __init__(self):
+        self.faaliyetler = []
+
+    def faaliyet_ekle(self, faaliyet: Faaliyet):
+        self.faaliyetler.append(faaliyet)
+
+    def urun_raporu(self):
+        print("\n--- Ürün Faaliyet Raporu ---")
+        for f in self.faaliyetler:
+            if isinstance(f, UrunFaaliyeti):
+                print(f)
+
+    def hayvancilik_raporu(self):
+        print("\n--- Hayvancılık Faaliyet Raporu ---")
+        for f in self.faaliyetler:
+            if isinstance(f, HayvancilikFaaliyeti):
+                print(f)
+Test Senaryosu
+
+def rapor_test():
+    sistem = RaporlamaSistemi()
+    now = datetime.now()
+
+    sistem.faaliyet_ekle(UrunFaaliyeti(now, "Buğday", 1200, "Hasat yapıldı."))
+    sistem.faaliyet_ekle(UrunFaaliyeti(now, "Mısır", 800, "Satışa gönderildi."))
+    sistem.faaliyet_ekle(HayvancilikFaaliyeti(now, "İnek", "Sağım", "Günde 20 litre süt."))
+    sistem.faaliyet_ekle(HayvancilikFaaliyeti(now, "Koyun", "Aşılama", "Yıllık aşı tamamlandı."))
+
+    sistem.urun_raporu()
+    sistem.hayvancilik_raporu()
+Örnek Çıktı
+
+--- Ürün Faaliyet Raporu ---
+[Ürün] 2025-04-30 - Hasat yapıldı. | Ürün: Buğday, Miktar: 1200 kg
+[Ürün] 2025-04-30 - Satışa gönderildi. | Ürün: Mısır, Miktar: 800 kg
+
+--- Hayvancılık Faaliyet Raporu ---
+[Hayvancılık] 2025-04-30 - Günde 20 litre süt. | Hayvan: İnek, İşlem: Sağım
+[Hayvancılık] 2025-04-30 - Yıllık aşı tamamlandı. | Hayvan: Koyun, İşlem: Aşılama
+
+
+raporlama sistemini factory metod kullanarak yaz
+
+Base Class - Rapor
+İlk olarak, tüm raporlar için bir temel sınıf (Rapor) ve rapor türlerine göre alt sınıflar (UrunRaporu, HayvancilikRaporu) oluşturacağız.
+
+
+from abc import ABC, abstractmethod
+from datetime import datetime
+
+class Rapor(ABC):
+    @abstractmethod
+    def rapor_olustur(self, faaliyetler):
+        pass
+
+class UrunRaporu(Rapor):
+    def rapor_olustur(self, faaliyetler):
+        print("\n--- Ürün Faaliyet Raporu ---")
+        for faaliyet in faaliyetler:
+            if isinstance(faaliyet, UrunFaaliyeti):
+                print(faaliyet)
+
+class HayvancilikRaporu(Rapor):
+    def rapor_olustur(self, faaliyetler):
+        print("\n--- Hayvancılık Faaliyet Raporu ---")
+        for faaliyet in faaliyetler:
+            if isinstance(faaliyet, HayvancilikFaaliyeti):
+                print(faaliyet)
+Faaliyet Sınıfları (Alt Sınıflar)
+Bu kısımda, UrunFaaliyeti ve HayvancilikFaaliyeti sınıfları, raporlama sisteminde kullanılacak faaliyet türlerini tanımlıyor.
+
+
+class Faaliyet:
+    def __init__(self, tarih: datetime, aciklama: str):
+        self.tarih = tarih
+        self.aciklama = aciklama
+
+    def __str__(self):
+        return f"{self.tarih.strftime('%Y-%m-%d')} - {self.aciklama}"
+
+class UrunFaaliyeti(Faaliyet):
+    def __init__(self, tarih, urun_adi, miktar_kg, aciklama):
+        super().__init__(tarih, aciklama)
+        self.urun_adi = urun_adi
+        self.miktar_kg = miktar_kg
+
+    def __str__(self):
+        return f"[Ürün] {super().__str__()} | Ürün: {self.urun_adi}, Miktar: {self.miktar_kg} kg"
+
+class HayvancilikFaaliyeti(Faaliyet):
+    def __init__(self, tarih, hayvan_turu, islem, aciklama):
+        super().__init__(tarih, aciklama)
+        self.hayvan_turu = hayvan_turu
+        self.islem = islem
+
+    def __str__(self):
+        return f"[Hayvancılık] {super().__str__()} | Hayvan: {self.hayvan_turu}, İşlem: {self.islem}"
+Factory Method - Rapor Fabrikası
+Şimdi, her bir rapor türü için ilgili factory method’u tanımlayacağız.
+
+class RaporFactory:
+    @staticmethod
+    def rapor_olustur(rapor_turu: str):
+        if rapor_turu == "urun":
+            return UrunRaporu()
+        elif rapor_turu == "hayvancilik":
+            return HayvancilikRaporu()
+        else:
+            raise ValueError("Geçersiz rapor türü")
+Raporlama Sistemi
+Raporları factory method ile oluşturacağız ve her rapor türüne uygun olarak faaliyetleri raporlayacağız.
+
+class RaporlamaSistemi:
+    def __init__(self):
+        self.faaliyetler = []
+
+    def faaliyet_ekle(self, faaliyet: Faaliyet):
+        self.faaliyetler.append(faaliyet)
+
+    def rapor_goster(self, rapor_turu: str):
+        rapor = RaporFactory.rapor_olustur(rapor_turu)
+        rapor.rapor_olustur(self.faaliyetler)
+Test Senaryosu
+Şimdi, sistemin doğru çalışıp çalışmadığını test edelim:
+
+def rapor_test():
+    from datetime import datetime, timedelta
+
+    # Raporlama sistemi
+    sistem = RaporlamaSistemi()
+    now = datetime.now()
+
+    # Faaliyetler ekleyelim
+    sistem.faaliyet_ekle(UrunFaaliyeti(now, "Buğday", 1200, "Hasat yapıldı."))
+    sistem.faaliyet_ekle(UrunFaaliyeti(now, "Mısır", 800, "Satışa gönderildi."))
+    sistem.faaliyet_ekle(HayvancilikFaaliyeti(now, "İnek", "Sağım", "Günde 20 litre süt."))
+    sistem.faaliyet_ekle(HayvancilikFaaliyeti(now, "Koyun", "Aşılama", "Yıllık aşı tamamlandı."))
+
+    # Ürün raporunu göster
+    sistem.rapor_goster("urun")
+
+    # Hayvancılık raporunu göster
+    sistem.rapor_goster("hayvancilik")
+Örnek Çıktı
+
+--- Ürün Faaliyet Raporu ---
+[Ürün] 2025-04-30 - Hasat yapıldı. | Ürün: Buğday, Miktar: 1200 kg
+[Ürün] 2025-04-30 - Satışa gönderildi. | Ürün: Mısır, Miktar: 800 kg
+
+--- Hayvancılık Faaliyet Raporu ---
+[Hayvancılık] 2025-04-30 - Günde 20 litre süt. | Hayvan: İnek, İşlem: Sağım
+[Hayvancılık] 2025-04-30 - Yıllık aşı tamamlandı. | Hayvan: Koyun, İşlem: Aşılama
+
+hayvanların sağlık durumunu izleyen bir modül yaz
+
+Hayvan Sağlık İzleme Modülü
+Hayvan Sınıfı: Hayvanın türü, yaşı ve sağlık durumu gibi bilgileri içerir.
+
+Sağlık Durumu: Her hayvanın sağlık durumu hakkında detaylı bilgi (örneğin, tedavi geçmişi, mevcut hastalıklar, aşılar vb.) tutar.
+
+Sağlık Raporları: Sağlık raporları eklenebilir ve bu raporlar hayvanın sağlık geçmişini gösterir.
+
+Hayvan Sınıfı ve Sağlık Durumu
+
+from datetime import datetime
+from typing import List
+
+class Hayvan:
+    def __init__(self, id: int, tur: str, yas: int):
+        self.id = id
+        self.tur = tur
+        self.yas = yas
+        self.saglik_durumu = SaglikDurumu()
+
+    def __str__(self):
+        return f"{self.tur} (Yaş: {self.yas}) - Sağlık Durumu: {self.saglik_durumu}"
+
+class SaglikDurumu:
+    def __init__(self):
+        self.durum = "Sağlıklı"  # Başlangıçta sağlıklı
+        self.raporlar = []  # Sağlık raporları
+        self.tedavi_gecmisi = []  # Tedavi geçmişi
+        self.asilar = []  # Aşılar
+
+    def rapor_ekle(self, rapor: str):
+        self.raporlar.append((datetime.now(), rapor))
+
+    def tedavi_ekle(self, tedavi: str):
+        self.tedavi_gecmisi.append((datetime.now(), tedavi))
+
+    def asiya_ekle(self, asiya: str):
+        self.asilar.append((datetime.now(), asiya))
+
+    def saglik_durumunu_guncelle(self, yeni_durum: str):
+        self.durum = yeni_durum
+Sağlık Durumu İzleme Sistemi
+Birden fazla hayvanın sağlık durumunu yönetebileceğimiz bir sınıf oluşturuyoruz. Bu sınıf, her hayvana ait sağlık raporlarını ekler, tedavi geçmişlerini saklar ve sağlık durumlarını günceller.
+
+
+class SaglikIzlemeSistemi:
+    def __init__(self):
+        self.hayvanlar = {}
+
+    def hayvan_ekle(self, hayvan: Hayvan):
+        self.hayvanlar[hayvan.id] = hayvan
+
+    def saglik_raporu_ekle(self, hayvan_id: int, rapor: str):
+        if hayvan_id in self.hayvanlar:
+            self.hayvanlar[hayvan_id].saglik_durumu.rapor_ekle(rapor)
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+
+    def tedavi_ekle(self, hayvan_id: int, tedavi: str):
+        if hayvan_id in self.hayvanlar:
+            self.hayvanlar[hayvan_id].saglik_durumu.tedavi_ekle(tedavi)
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+
+    def asiya_ekle(self, hayvan_id: int, asiya: str):
+        if hayvan_id in self.hayvanlar:
+            self.hayvanlar[hayvan_id].saglik_durumu.asiya_ekle(asiya)
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+
+    def saglik_durumu_goster(self, hayvan_id: int):
+        if hayvan_id in self.hayvanlar:
+            hayvan = self.hayvanlar[hayvan_id]
+            print(f"{hayvan}\n")
+            print("Sağlık Raporları:")
+            for rapor in hayvan.saglik_durumu.raporlar:
+                print(f"- {rapor[0]}: {rapor[1]}")
+            print("Tedavi Geçmişi:")
+            for tedavi in hayvan.saglik_durumu.tedavi_gecmisi:
+                print(f"- {tedavi[0]}: {tedavi[1]}")
+            print("Aşılar:")
+            for asiya in hayvan.saglik_durumu.asilar:
+                print(f"- {asiya[0]}: {asiya[1]}")
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+Test Senaryosu
+Bu test senaryosunda, bir hayvan ekliyoruz, ona sağlık raporu, tedavi ve aşı ekliyoruz ve sonrasında sağlık durumunu görüntülüyoruz.
+
+
+def saglik_izleme_test():
+    # Sağlık izleme sistemi oluştur
+    sistem = SaglikIzlemeSistemi()
+
+    # Hayvanlar ekleyelim
+    inek = Hayvan(1, "İnek", 3)
+    koyun = Hayvan(2, "Koyun", 2)
+    sistem.hayvan_ekle(inek)
+    sistem.hayvan_ekle(koyun)
+
+    # Sağlık raporları ekleyelim
+    sistem.saglik_raporu_ekle(inek.id, "Genel sağlık durumu iyi.")
+    sistem.saglik_raporu_ekle(koyun.id, "Ağızda yara belirtisi.")
+    
+    # Tedavi ekleyelim
+    sistem.tedavi_ekle(inek.id, "Dış parazit tedavisi uygulandı.")
+    sistem.tedavi_ekle(koyun.id, "Antibiyotik tedavisi başlatıldı.")
+    
+    # Aşı ekleyelim
+    sistem.asiya_ekle(inek.id, "Brucella aşısı yapıldı.")
+    sistem.asiya_ekle(koyun.id, "Sığır vebası aşısı yapıldı.")
+
+    # Sağlık durumlarını gösterelim
+    sistem.saglik_durumu_goster(inek.id)
+    sistem.saglik_durumu_goster(koyun.id)
+
+# Test çalıştırma
+saglik_izleme_test()
+Örnek Çıktı
+
+İnek (Yaş: 3) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+- 2025-04-30 12:30:45: Genel sağlık durumu iyi.
+Tedavi Geçmişi:
+- 2025-04-30 12:30:45: Dış parazit tedavisi uygulandı.
+Aşılar:
+- 2025-04-30 12:30:45: Brucella aşısı yapıldı.
+
+Koyun (Yaş: 2) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+- 2025-04-30 12:30:45: Ağızda yara belirtisi.
+Tedavi Geçmişi:
+- 2025-04-30 12:30:45: Antibiyotik tedavisi başlatıldı.
+Aşılar:
+- 2025-04-30 12:30:45: Sığır vebası aşısı yapıldı.
+
+premium özellik olarak hayvanın aşı durumunu ve en son ne zaman beslendiğini dekoratörle yaz
+
+
+Decorator ile Premium Özellikler
+Premium Özellik Decorator'ı: Hayvan sınıfına ekleyeceğimiz premium özellikleri (aşı durumu ve son beslenme tarihi) yönetecek bir decorator.
+
+Premium Hayvan Sınıfı: Premium kullanıcılar için, aşı durumu ve son beslenme tarihi gibi bilgileri tutan yeni bir yapı.
+
+Beslenme ve Aşı Durumu: Bu bilgilerin takibi için metodlar.
+
+Decorator ve Premium Sınıf Yapısı
+
+from datetime import datetime
+from functools import wraps
+
+# Premium özellikleri eklemek için dekoratör
+def premium_ozellik(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # Premium kullanıcı için ek özellikleri ekle
+        if hasattr(self, '_premium'):
+            print(f"Premium özellik aktif: {self.__class__.__name__}")
+            return func(self, *args, **kwargs)
+        else:
+            print("Premium özelliklere erişim yok.")
+            return func(self, *args, **kwargs)
+    return wrapper
+
+# Hayvan sınıfı
+class Hayvan:
+    def __init__(self, id: int, tur: str, yas: int):
+        self.id = id
+        self.tur = tur
+        self.yas = yas
+        self.saglik_durumu = SaglikDurumu()
+        self._premium = False  # Varsayılan olarak premium değil
+
+    def premium_ozelliklerini_ac(self):
+        """Premium özellikleri açan metod"""
+        self._premium = True
+        print(f"{self.tur} ({self.id}) premium özelliklere sahip.")
+
+    def __str__(self):
+        return f"{self.tur} (Yaş: {self.yas}) - Sağlık Durumu: {self.saglik_durumu}"
+
+# Sağlık durumu ve sağlık raporlarını tutan sınıf
+class SaglikDurumu:
+    def __init__(self):
+        self.durum = "Sağlıklı"
+        self.raporlar = []
+        self.tedavi_gecmisi = []
+        self.asilar = []
+        self.son_beslenme = None
+
+    def rapor_ekle(self, rapor: str):
+        self.raporlar.append((datetime.now(), rapor))
+
+    def tedavi_ekle(self, tedavi: str):
+        self.tedavi_gecmisi.append((datetime.now(), tedavi))
+
+    def asiya_ekle(self, asiya: str):
+        self.asilar.append((datetime.now(), asiya))
+
+    def saglik_durumunu_guncelle(self, yeni_durum: str):
+        self.durum = yeni_durum
+
+    # Premium özellik - son beslenme tarihi
+    @premium_ozellik
+    def son_beslenme_ekle(self):
+        self.son_beslenme = datetime.now()
+        print(f"Son beslenme tarihi {self.son_beslenme} olarak kaydedildi.")
+
+    # Premium özellik - aşı durumu
+    @premium_ozellik
+    def asiya_ekle(self, asiya: str):
+        super().asiya_ekle(asiya)
+        print(f"Hayvan {asiya} aşısı oldu.")
+
+# Sağlık izleme sistemi
+class SaglikIzlemeSistemi:
+    def __init__(self):
+        self.hayvanlar = {}
+
+    def hayvan_ekle(self, hayvan: Hayvan):
+        self.hayvanlar[hayvan.id] = hayvan
+
+    def saglik_raporu_ekle(self, hayvan_id: int, rapor: str):
+        if hayvan_id in self.hayvanlar:
+            self.hayvanlar[hayvan_id].saglik_durumu.rapor_ekle(rapor)
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+
+    def saglik_durumu_goster(self, hayvan_id: int):
+        if hayvan_id in self.hayvanlar:
+            hayvan = self.hayvanlar[hayvan_id]
+            print(f"{hayvan}\n")
+            print("Sağlık Raporları:")
+            for rapor in hayvan.saglik_durumu.raporlar:
+                print(f"- {rapor[0]}: {rapor[1]}")
+            print("Tedavi Geçmişi:")
+            for tedavi in hayvan.saglik_durumu.tedavi_gecmisi:
+                print(f"- {tedavi[0]}: {tedavi[1]}")
+            print("Aşılar:")
+            for asiya in hayvan.saglik_durumu.asilar:
+                print(f"- {asiya[0]}: {asiya[1]}")
+            if hayvan.saglik_durumu.son_beslenme:
+                print(f"Son Beslenme: {hayvan.saglik_durumu.son_beslenme}")
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+Premium Özelliklerin Eklenmesi
+Bu yapıda:
+
+premium_ozellik dekoratörü, metodları süsleyerek, yalnızca premium özelliklerin açıldığı durumda çalışmasını sağlar.
+
+son_beslenme_ekle ve asiya_ekle metodları, premium kullanıcılar için ekstra işlem yapacak şekilde dekoratörle işaretlenmiştir.
+
+Test Senaryosu
+Şimdi premium özelliklerin doğru çalışıp çalışmadığını test edelim.
+
+def premium_test():
+    # Sağlık izleme sistemi oluştur
+    sistem = SaglikIzlemeSistemi()
+
+    # Hayvanlar ekleyelim
+    inek = Hayvan(1, "İnek", 3)
+    koyun = Hayvan(2, "Koyun", 2)
+
+    # Premium özellikleri açalım
+    inek.premium_ozelliklerini_ac()
+
+    # Hayvanları sisteme ekleyelim
+    sistem.hayvan_ekle(inek)
+    sistem.hayvan_ekle(koyun)
+
+    # Premium özelliklere sahip inek için aşı ve beslenme tarihi ekleyelim
+    inek.saglik_durumu.son_beslenme_ekle()  # Premium özellik
+    inek.saglik_durumu.asiya_ekle("Brucella aşısı")  # Premium özellik
+
+    # Koyun için de aynı işlemi yapalım, ancak koyun premium değil
+    koyun.saglik_durumu.son_beslenme_ekle()  # Premium özellik devre dışı
+    koyun.saglik_durumu.asiya_ekle("Sığır vebası aşısı")  # Premium özellik devre dışı
+
+    # Sağlık durumlarını gösterelim
+    sistem.saglik_durumu_goster(inek.id)
+    sistem.saglik_durumu_goster(koyun.id)
+
+# Testi çalıştır
+premium_test()
+Örnek Çıktı
+
+Premium özellik aktif: Hayvan
+Son beslenme tarihi 2025-04-30 14:30:45 olarak kaydedildi.
+Hayvan Brucella aşısı oldu.
+Premium özelliklere erişim yok.
+Hayvan Sığır vebası aşısı oldu.
+
+İnek (Yaş: 3) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+Tedavi Geçmişi:
+Aşılar:
+- 2025-04-30 14:30:45: Brucella aşısı oldu.
+Son Beslenme: 2025-04-30 14:30:45
+
+Koyun (Yaş: 2) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+Tedavi Geçmişi:
+Aşılar:
+- 2025-04-30 14:30:45: Sığır vebası aşısı oldu.
+
+
+
+dekoratörle son eklediğim özellikler yalnızca premium kullanıcılarda kullanılabilir olmalı
+
+Aşağıda, bu işlevi sağlayacak şekilde düzenlenmiş bir çözüm yer almaktadır.
+
+Premium Kullanıcı Kontrolü ve Decorator
+Premium özelliği, sadece premium kullanıcılar için aktif olacak.
+
+Decorator, hayvanın premium özelliklere sahip olup olmadığını kontrol edip, yalnızca premium ise belirtilen özellikleri ekleyecek.
+
+Kod: Premium Özellik Kontrolü için Decorator
+
+from datetime import datetime
+from functools import wraps
+
+# Premium kullanıcıları kontrol eden decorator
+def premium_ozellik(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        # Eğer kullanıcı premium değilse, özellik çalıştırılmaz.
+        if not self._premium:
+            print(f"{self.__class__.__name__} premium özelliklere sahip değil.")
+            return None  # Premium değilse işlem yapma.
+        
+        # Premium özellik aktifse, fonksiyonu çalıştır.
+        print(f"{self.__class__.__name__} premium özellik aktif.")
+        return func(self, *args, **kwargs)
+    return wrapper
+
+# Hayvan sınıfı
+class Hayvan:
+    def __init__(self, id: int, tur: str, yas: int):
+        self.id = id
+        self.tur = tur
+        self.yas = yas
+        self.saglik_durumu = SaglikDurumu()
+        self._premium = False  # Varsayılan olarak premium değil
+
+    def premium_ozelliklerini_ac(self):
+        """Premium özellikleri açan metod"""
+        self._premium = True
+        print(f"{self.tur} ({self.id}) premium özelliklere sahip.")
+
+    def __str__(self):
+        return f"{self.tur} (Yaş: {self.yas}) - Sağlık Durumu: {self.saglik_durumu}"
+
+# Sağlık durumu ve sağlık raporlarını tutan sınıf
+class SaglikDurumu:
+    def __init__(self):
+        self.durum = "Sağlıklı"
+        self.raporlar = []
+        self.tedavi_gecmisi = []
+        self.asilar = []
+        self.son_beslenme = None
+
+    def rapor_ekle(self, rapor: str):
+        self.raporlar.append((datetime.now(), rapor))
+
+    def tedavi_ekle(self, tedavi: str):
+        self.tedavi_gecmisi.append((datetime.now(), tedavi))
+
+    def asiya_ekle(self, asiya: str):
+        self.asilar.append((datetime.now(), asiya))
+
+    def saglik_durumunu_guncelle(self, yeni_durum: str):
+        self.durum = yeni_durum
+
+    # Premium özellik - Son Beslenme Tarihini ekleyelim
+    @premium_ozellik
+    def son_beslenme_ekle(self):
+        self.son_beslenme = datetime.now()
+        print(f"Son beslenme tarihi {self.son_beslenme} olarak kaydedildi.")
+
+    # Premium özellik - Aşı durumu ekleyelim
+    @premium_ozellik
+    def asiya_ekle(self, asiya: str):
+        self.asilar.append((datetime.now(), asiya))
+        print(f"Hayvan {asiya} aşısı oldu.")
+
+# Sağlık izleme sistemi
+class SaglikIzlemeSistemi:
+    def __init__(self):
+        self.hayvanlar = {}
+
+    def hayvan_ekle(self, hayvan: Hayvan):
+        self.hayvanlar[hayvan.id] = hayvan
+
+    def saglik_raporu_ekle(self, hayvan_id: int, rapor: str):
+        if hayvan_id in self.hayvanlar:
+            self.hayvanlar[hayvan_id].saglik_durumu.rapor_ekle(rapor)
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+
+    def saglik_durumu_goster(self, hayvan_id: int):
+        if hayvan_id in self.hayvanlar:
+            hayvan = self.hayvanlar[hayvan_id]
+            print(f"{hayvan}\n")
+            print("Sağlık Raporları:")
+            for rapor in hayvan.saglik_durumu.raporlar:
+                print(f"- {rapor[0]}: {rapor[1]}")
+            print("Tedavi Geçmişi:")
+            for tedavi in hayvan.saglik_durumu.tedavi_gecmisi:
+                print(f"- {tedavi[0]}: {tedavi[1]}")
+            print("Aşılar:")
+            for asiya in hayvan.saglik_durumu.asilar:
+                print(f"- {asiya[0]}: {asiya[1]}")
+            if hayvan.saglik_durumu.son_beslenme:
+                print(f"Son Beslenme: {hayvan.saglik_durumu.son_beslenme}")
+        else:
+            print(f"Hayvan ID {hayvan_id} bulunamadı.")
+Test Senaryosu
+Bu test senaryosunda, premium özelliklerin sadece premium kullanıcılar için çalıştığını kontrol edeceğiz.
+
+
+def premium_test():
+    # Sağlık izleme sistemi oluştur
+    sistem = SaglikIzlemeSistemi()
+
+    # Hayvanlar ekleyelim
+    inek = Hayvan(1, "İnek", 3)
+    koyun = Hayvan(2, "Koyun", 2)
+
+    # Premium özellikleri açalım
+    inek.premium_ozelliklerini_ac()
+
+    # Hayvanları sisteme ekleyelim
+    sistem.hayvan_ekle(inek)
+    sistem.hayvan_ekle(koyun)
+
+    # Premium özelliklere sahip inek için aşı ve beslenme tarihi ekleyelim
+    inek.saglik_durumu.son_beslenme_ekle()  # Premium özellik
+    inek.saglik_durumu.asiya_ekle("Brucella aşısı")  # Premium özellik
+
+    # Koyun için de aynı işlemi yapalım, ancak koyun premium değil
+    koyun.saglik_durumu.son_beslenme_ekle()  # Premium özellik devre dışı
+    koyun.saglik_durumu.asiya_ekle("Sığır vebası aşısı")  # Premium özellik devre dışı
+
+    # Sağlık durumlarını gösterelim
+    sistem.saglik_durumu_goster(inek.id)
+    sistem.saglik_durumu_goster(koyun.id)
+
+# Testi çalıştır
+premium_test()
+Örnek Çıktı
+
+
+İnek (Yaş: 3) premium özelliklere sahip.
+Premium özellik aktif: Hayvan
+Son beslenme tarihi 2025-04-30 14:30:45 olarak kaydedildi.
+Hayvan Brucella aşısı oldu.
+Hayvan premium özelliklere sahip değil.
+Hayvan Sığır vebası aşısı oldu.
+
+İnek (Yaş: 3) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+Tedavi Geçmişi:
+Aşılar:
+- 2025-04-30 14:30:45: Brucella aşısı oldu.
+Son Beslenme: 2025-04-30 14:30:45
+
+Koyun (Yaş: 2) - Sağlık Durumu: Sağlıklı
+
+Sağlık Raporları:
+Tedavi Geçmişi:
+Aşılar:
+- 2025-04-30 14:30:45: Sığır vebası aşısı oldu.
+
+
+nem sensörünü okuyan bir sistemim var 1 ile 10 arası bir değer veriyor ve ne kadar suya ihtiyaç olup olmadığını göstersin. böyle bi modül yap
+
+
+Kod: Nem Sensörünü Okuyan Modül
+
+class NemSensoru:
+    def __init__(self):
+        self.nem_degeri = 0
+
+    def nem_degerini_oku(self):
+        # Bu fonksiyon, gerçek bir sensör verisi alındığında burada yapılacak işlemle güncellenebilir.
+        # Şu an rastgele bir değer döndürülüyor (1 ile 10 arası)
+        import random
+        self.nem_degeri = random.randint(1, 10)
+        return self.nem_degeri
+
+    def suya_ihtiyac_var_mi(self):
+        """Nem seviyesine göre suya ihtiyaç olup olmadığını belirler."""
+        if self.nem_degeri < 4:
+            return "Suya ihtiyaç var. Nem seviyesi düşük."
+        elif 4 <= self.nem_degeri <= 7:
+            return "Su miktarı ideal. Nem seviyesi yeterli."
+        else:
+            return "Fazla suya gerek yok. Nem seviyesi yüksek."
+
+class SulamaSistemi:
+    def __init__(self, nem_sensörü):
+        self.nem_sensörü = nem_sensörü
+
+    def nemi_degerlendir(self):
+        nem_degeri = self.nem_sensörü.nem_degerini_oku()
+        print(f"Nem sensöründen alınan değer: {nem_degeri}")
+        durum = self.nem_sensörü.suya_ihtiyac_var_mi()
+        print(durum)
+
+# Test senaryosu
+def test_sulama_sistemi():
+    nem_sensörü = NemSensoru()
+    sulama_sistemi = SulamaSistemi(nem_sensörü)
+
+    # Nem durumu değerlendir
+    sulama_sistemi.nemi_degerlendir()
+
+# Testi çalıştır
+test_sulama_sistemi()
+Açıklamalar:
+NemSensoru sınıfı:
+
+Bu sınıf, nem sensörünün işlevini simüle eder.
+
+nem_degerini_oku() metodu, 1 ile 10 arasında rastgele bir değer döndürür (gerçek bir sensör ile entegre edilebilir).
+
+suya_ihtiyac_var_mi() metodu, nem seviyesini değerlendirerek suya ihtiyacın olup olmadığını belirler:
+
+Eğer nem seviyesi 4'ten düşükse, suya ihtiyaç olduğu belirtilir.
+
+Eğer nem seviyesi 4 ile 7 arasında ise, su miktarının ideal olduğu belirtilir.
+
+Eğer nem seviyesi 7'den yüksekse, fazla suya gerek olmadığı belirtilir.
+
+SulamaSistemi sınıfı:
+
+Bu sınıf, nem sensöründen gelen veriyi değerlendirir ve durumu kullanıcıya bildirir.
+
+Test Senaryosu:
+
+test_sulama_sistemi() fonksiyonu, sulama sisteminin nem sensöründen değer okumasını ve değerlendirmesini simüle eder.
+
+Örnek Çıktı
+
+Nem sensöründen alınan değer: 3
+Suya ihtiyaç var. Nem seviyesi düşük.
+Veya başka bir durumda:
+
+
+Nem sensöründen alınan değer: 8
+Fazla suya gerek yok. Nem seviyesi yüksek.
+Özet
+Bu sistem, nem sensöründen gelen veriye göre suya ihtiyaç olup olmadığını belirler. Nem seviyesi 1 ile 10 arasında değişir ve bu değere göre sulama durumu çıkarılır.
+
+
+
+eski bir nem sensörüm var nemliliği % olarak veriyor. benim orijinal nem sensörü modülüm ise az çok ya da 1 ile 10 arasında alıyor. adaptör tasarım kalıbı kullanarak bunu okunabilir hale getirelim
+
+Adaptör Tasarım Kalıbı (Adapter Pattern), farklı arayüzlere sahip nesneleri birbirine uyumlu hale getiren bir yapıdır. Bu durumda, eski sensörünüzün % değerini 1-10 arasında bir değere dönüştürmek için bir adaptör sınıfı yazacağız.
+
+Kod: Adaptör Tasarım Kalıbı ile Uyumlu Sensör
+İlk olarak, eski sensör sınıfını ve orijinal sensör sınıfını yazacağız ve ardından bir Adaptör sınıfı ile bu iki sınıfı birbirine uyumlu hale getireceğiz.
+
+1. Eski Nem Sensörü (Yüzde ile Çalışan)
+
+class EskiNemSensoru:
+    def __init__(self):
+        self.nem_yuzdesi = 0
+
+    def nemi_oku(self):
+        # Eski sensör % cinsinden veri okur
+        import random
+        self.nem_yuzdesi = random.randint(0, 100)
+        return self.nem_yuzdesi
+2. Orijinal Nem Sensörü (1-10 Arası Değer)
+python
+Kopyala
+Düzenle
+class OrijinalNemSensoru:
+    def __init__(self):
+        self.nem_degeri = 0
+
+    def nem_degerini_oku(self):
+        # Orijinal sensör 1-10 arasında veri okur
+        import random
+        self.nem_degeri = random.randint(1, 10)
+        return self.nem_degeri
+3. Adaptör Tasarım Kalıbı
+Adaptör sınıfı, eski sensörün döndürdüğü yüzdeyi 1-10 arasına dönüştürerek orijinal sensörle uyumlu hale getirecek.
+
+python
+Kopyala
+Düzenle
+class NemSensoruAdaptoru:
+    def __init__(self, eski_sensor: EskiNemSensoru):
+        self.eski_sensor = eski_sensor
+
+    def nem_degerini_oku(self):
+        # Eski sensörden % olarak veri al ve 1-10 arasına dönüştür
+        yuzde = self.eski_sensor.nemi_oku()
+        # Yüzdeyi 1-10 arasına çevir (0-100 -> 1-10)
+        return (yuzde // 10) + 1
+4. Nem Durumunu Yorumlayan Sulama Sistemi
+python
+Kopyala
+Düzenle
+class SulamaSistemi:
+    def __init__(self, nem_sensörü):
+        self.nem_sensörü = nem_sensörü
+
+    def nemi_degerlendir(self):
+        nem_degeri = self.nem_sensörü.nem_degerini_oku()
+        print(f"Nem sensöründen alınan değer: {nem_degeri}")
+        if nem_degeri < 4:
+            print("Suya ihtiyaç var. Nem seviyesi düşük.")
+        elif 4 <= nem_degeri <= 7:
+            print("Su miktarı ideal. Nem seviyesi yeterli.")
+        else:
+            print("Fazla suya gerek yok. Nem seviyesi yüksek.")
+5. Test Senaryosu
+Eski sensör ile uyumlu hale getirilmiş yeni sistemin test edilmesi:
+
+
+def test_adaptor_sulama_sistemi():
+    eski_sensör = EskiNemSensoru()
+    adaptör = NemSensoruAdaptoru(eski_sensör)  # Eski sensörü yeni sisteme adapte ettik
+    sulama_sistemi = SulamaSistemi(adaptör)
+
+    # Nem durumu değerlendir
+    sulama_sistemi.nemi_degerlendir()
+
+# Testi çalıştır
+test_adaptor_sulama_sistemi()
+Örnek Çıktı
+
+Nem sensöründen alınan değer: 5
+Su miktarı ideal. Nem seviyesi yeterli.
+Ya da:
+
+
+Nem sensöründen alınan değer: 2
+Suya ihtiyaç var. Nem seviyesi düşük.
+Açıklamalar:
+EskiSensör sınıfı, nem değerini % olarak okur (0-100 arasında).
+
+OrijinalSensör sınıfı, nem değerini 1-10 arasında okur.
+
+NemSensoruAdaptoru sınıfı, eski sensörün % değerini 1-10 arasına dönüştürerek orijinal sensörle uyumlu hale getirir.
+
+Yüzdeyi 10'a bölüp (tam sayı bölmesi) 1 ekleriz. Bu, 0-100 arasındaki bir değeri 1-10 arasına dönüştürür.
+
+SulamaSistemi sınıfı, nem sensöründen alınan değeri değerlendirir ve buna göre su ihtiyacını belirler.
+
+Özet:
+Adaptör Tasarım Kalıbı sayesinde eski sensörünüzü yeni sisteme uyumlu hale getirdik.
+
+Eski sensörün % değerini, 1-10 arasına dönüştürerek kullanabilirsiniz.
+
+Bu yapıyı, farklı sensör tipleri ve sistemler için de genişletebilirsiniz.
+
+
+
+
+
+benim için bir sulama modülü yaz. sulamayla ilgili zaman bazlı ya da nem bazlı iki yöntemim olsun.
+
+Sulama Modülü Tasarımı
+Zaman Bazlı Sulama: Belirli bir süre aralığında sulama yapar.
+
+Nem Bazlı Sulama: Toprağın nem seviyesine göre su verir. Eğer nem seviyesi düşükse sulama yapılır.
+
+Aşağıda, her iki yöntemi de içeren bir sulama modülü örneği yer almaktadır.
+
+Kod: Sulama Modülü
+1. Nem Sensörü Sınıfı
+Öncelikle, nem sensörünü tekrar hatırlayalım ve 1-10 arasında bir nem değeri döndüren bir sensör sınıfı oluşturalım.
+
+import random
+import time
+
+class NemSensoru:
+    def __init__(self):
+        self.nem_degeri = 0
+
+    def nem_degerini_oku(self):
+        """Nem sensöründen veri okur (1-10 arası)."""
+        self.nem_degeri = random.randint(1, 10)
+        return self.nem_degeri
+2. Sulama Sistemi Sınıfı
+Sulama sistemi sınıfında hem zaman bazlı hem de nem bazlı sulama yöntemlerini tanımlayacağız.
+
+
+class SulamaSistemi:
+    def __init__(self, nem_sensörü):
+        self.nem_sensörü = nem_sensörü
+        self.sulama_durum = False  # Sulama durumu, başlangıçta kapalı
+
+    def zaman_bazli_sulama(self, zaman_araligi_saniye):
+        """Zaman bazlı sulama (belirli bir zaman aralığıyla sulama)."""
+        print("Zaman bazlı sulama başlatıldı.")
+        while True:
+            print("Sulama yapıldı.")
+            self.sulama_durum = True
+            time.sleep(zaman_araligi_saniye)  # Belirli bir süre aralığı (saniye cinsinden)
+            self.sulama_durum = False
+            print("Sulama tamamlandı.")
+            time.sleep(5)  # Sulama sonrası bekleme süresi
+
+    def nem_bazli_sulama(self):
+        """Nem bazlı sulama (nem seviyesi düşükse sulama yapılır)."""
+        nem_degeri = self.nem_sensörü.nem_degerini_oku()
+        print(f"Nem sensöründen alınan değer: {nem_degeri}")
+
+        if nem_degeri < 4:
+            print("Suya ihtiyaç var. Nem seviyesi düşük, sulama yapılıyor.")
+            self.sulama_durum = True
+        elif 4 <= nem_degeri <= 7:
+            print("Su miktarı ideal. Nem seviyesi yeterli.")
+            self.sulama_durum = False
+        else:
+            print("Fazla suya gerek yok. Nem seviyesi yüksek.")
+            self.sulama_durum = False
+3. Test Senaryosu
+Zaman bazlı ve nem bazlı sulamayı test etmek için bir senaryo yazalım.
+
+
+def test_sulama_sistemi():
+    nem_sensörü = NemSensoru()
+    sulama_sistemi = SulamaSistemi(nem_sensörü)
+
+    # Nem bazlı sulama test edelim
+    print("Nem bazlı sulama başlatılıyor...")
+    sulama_sistemi.nem_bazli_sulama()
+
+    # Zaman bazlı sulama test edelim
+    print("Zaman bazlı sulama başlatılıyor...")
+    # 10 saniyede bir sulama yapmak için
+    # sulama_sistemi.zaman_bazli_sulama(10) # Bu satırı açarak zaman bazlı sulamayı test edebilirsiniz.
+    
+# Testi çalıştır
+test_sulama_sistemi()
+Açıklamalar:
+NemSensoru Sınıfı:
+
+nem_degerini_oku() metodu, nem değerini 1 ile 10 arasında rastgele döndürür.
+
+SulamaSistemi Sınıfı:
+
+zaman_bazli_sulama(zaman_araligi_saniye) metodu, belirtilen zaman aralığında sulama yapar (sürekli olarak sulama işlemi yapılır, aralık belirli bir süreyle ayarlanır).
+
+nem_bazli_sulama() metodu, nem sensörünün okuduğu değeri alır ve nem seviyesi düşükse sulama yapar.
+
+Test Senaryosu:
+
+test_sulama_sistemi() fonksiyonu, her iki yöntemi de test etmek için yazılmıştır.
+
+Zaman bazlı sulama için zaman aralığını saniye cinsinden belirledik (örneğin, 10 saniyede bir sulama yapılıyor).
+
+Nem bazlı sulama, nem seviyesi düşükse sulama yapar, idealse yapmaz.
+
+Örnek Çıktı
+Nem bazlı sulama:
+
+
+Nem sensöründen alınan değer: 3
+Suya ihtiyaç var. Nem seviyesi düşük, sulama yapılıyor.
+Zaman bazlı sulama:
+
+
+Zaman bazlı sulama başlatıldı.
+Sulama yapıldı.
+Sulama tamamlandı.
+
+
+
+bunu strateji methoduna uygun olarak yaz
+
+Burada zaman bazlı ve nem bazlı sulama yöntemlerini, bir Strateji olarak tanımlayacağız ve bu stratejileri SulamaSistemi sınıfında dinamik olarak değiştireceğiz.
+
+Strateji Tasarım Kalıbı ile Sulama Modülü
+Aşağıda, strateji desenine uygun olarak zaman bazlı ve nem bazlı sulama işlemlerini dinamik şekilde değiştiren bir sistem tasarladım:
+
+Kod: Strateji Tasarım Kalıbı ile Sulama Sistemi
+1. Sulama Stratejisi (Strateji Arayüzü)
+İlk olarak bir SulamaStratejisi sınıfı tanımlayacağız. Bu sınıf, her sulama stratejisinin uygulamak zorunda olduğu sulama_yap() metodunu içerir.
+
+
+from abc import ABC, abstractmethod
+
+class SulamaStratejisi(ABC):
+    @abstractmethod
+    def sulama_yap(self):
+        pass
+2. Zaman Bazlı Sulama Stratejisi
+Zaman bazlı sulama işlemi, belirli bir zaman aralığında sulama yapar.
+
+
+import time
+
+class ZamanBazliSulama(SulamaStratejisi):
+    def __init__(self, zaman_araligi_saniye):
+        self.zaman_araligi_saniye = zaman_araligi_saniye
+
+    def sulama_yap(self):
+        """Zaman bazlı sulama (belirli bir zaman aralığıyla sulama)."""
+        print("Zaman bazlı sulama başlatıldı.")
+        while True:
+            print("Sulama yapıldı.")
+            time.sleep(self.zaman_araligi_saniye)  # Belirli bir süre aralığı (saniye cinsinden)
+            print("Sulama tamamlandı.")
+            time.sleep(5)  # Sulama sonrası bekleme süresi
+3. Nem Bazlı Sulama Stratejisi
+Nem bazlı sulama işlemi, toprak nem seviyesine göre sulama yapar.
+
+
+class NemSensoru:
+    def __init__(self):
+        self.nem_degeri = 0
+
+    def nem_degerini_oku(self):
+        """Nem sensöründen veri okur (1-10 arası)."""
+        self.nem_degeri = random.randint(1, 10)
+        return self.nem_degeri
+
+class NemBazliSulama(SulamaStratejisi):
+    def __init__(self, nem_sensörü):
+        self.nem_sensörü = nem_sensörü
+
+    def sulama_yap(self):
+        """Nem bazlı sulama (nem seviyesi düşükse sulama yapılır)."""
+        nem_degeri = self.nem_sensörü.nem_degerini_oku()
+        print(f"Nem sensöründen alınan değer: {nem_degeri}")
+
+        if nem_degeri < 4:
+            print("Suya ihtiyaç var. Nem seviyesi düşük, sulama yapılıyor.")
+        elif 4 <= nem_degeri <= 7:
+            print("Su miktarı ideal. Nem seviyesi yeterli.")
+        else:
+            print("Fazla suya gerek yok. Nem seviyesi yüksek.")
+4. Sulama Sistemi (Context)
+SulamaSistemi sınıfı, sulama stratejisini alır ve stratejiye göre sulama yapar.
+
+
+class SulamaSistemi:
+    def __init__(self, sulama_stratejisi: SulamaStratejisi):
+        self.sulama_stratejisi = sulama_stratejisi
+
+    def sulama_yap(self):
+        """Geçerli strateji ile sulama yap."""
+        self.sulama_stratejisi.sulama_yap()
+
+    def strateji_degistir(self, yeni_strateji: SulamaStratejisi):
+        """Sulama stratejisini değiştir."""
+        self.sulama_stratejisi = yeni_strateji
+5. Test Senaryosu
+Burada, her iki stratejiyi de test edeceğiz. İlk olarak nem bazlı sulama ile başlayıp, ardından zaman bazlı sulama stratejisine geçeceğiz.
+
+
+def test_sulama_stratejisi():
+    nem_sensörü = NemSensoru()
+
+    # Başlangıçta nem bazlı sulama stratejisini seçiyoruz
+    nem_stratejisi = NemBazliSulama(nem_sensörü)
+    sulama_sistemi = SulamaSistemi(nem_stratejisi)
+    
+    print("Nem bazlı sulama başlatılıyor...")
+    sulama_sistemi.sulama_yap()
+    
+    # Zaman bazlı sulama stratejisini seçiyoruz
+    zaman_stratejisi = ZamanBazliSulama(10)  # 10 saniyede bir sulama
+    sulama_sistemi.strateji_degistir(zaman_stratejisi)
+    
+    print("Zaman bazlı sulama başlatılıyor...")
+    sulama_sistemi.sulama_yap()
+    
+# Testi çalıştır
+test_sulama_stratejisi()
+Açıklamalar:
+SulamaStratejisi (Arayüz):
+
+sulama_yap() metodunu her sulama stratejisinin uygulaması zorunludur.
+
+Bu sınıf, zaman bazlı ve nem bazlı sulama gibi farklı stratejilerin ortak temelini oluşturur.
+
+ZamanBazliSulama ve NemBazliSulama:
+
+ZamanBazliSulama: Belirli bir zaman aralığı ile sulama yapar. Bu, zaman bazlı sulama stratejisidir.
+
+NemBazliSulama: Nem sensörünün verdiği değere göre sulama yapar. Nem seviyesi düşükse sulama yapar.
+
+SulamaSistemi:
+
+Bu sınıf, hangi sulama stratejisinin geçerli olduğunu bilmekte ve stratejiyi uygulamaktadır.
+
+strateji_degistir() metodu ile sulama stratejisini değiştirebiliriz.
+
+Test Senaryosu:
+
+İlk olarak nem bazlı sulama yapıyoruz. Sonra zaman bazlı sulama stratejisine geçiyoruz.
+
+Örnek Çıktı
+Nem bazlı sulama:
+
+
+Nem sensöründen alınan değer: 3
+Suya ihtiyaç var. Nem seviyesi düşük, sulama yapılıyor.
+Zaman bazlı sulama:
+
+
+Zaman bazlı sulama başlatıldı.
+Sulama yapıldı.
+Sulama tamamlandı.
