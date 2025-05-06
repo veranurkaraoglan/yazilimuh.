@@ -1,0 +1,70 @@
+kullanılabilirlik (İngilizcesi: usability), bir sistemin veya yazılımın kullanıcılar tarafından ne kadar kolay, verimli ve memnuniyet verici bir şekilde kullanılabildiğini ifade eder. 
+Kullanılabilirlik, özellikle insan-bilgisayar etkileşimi (HCI - Human-Computer Interaction), kullanıcı arayüzü tasarımı ve kullanıcı deneyimi (UX) alanlarında önemli bir kavramdır.
+
+📌 Kullanılabilirliğin Temel Özellikleri (ISO 9241-11’e göre):
+Etkinlik (Effectiveness):
+Kullanıcının hedeflerine ne kadar doğru bir şekilde ulaşabildiği.
+
+Verimlilik (Efficiency):
+Hedefe ulaşmak için harcanan çaba ve kaynak miktarı.
+
+Memnuniyet (Satisfaction):
+Kullanıcının sistemle etkileşimden ne kadar memnun kaldığı.
+
+🎯 Kullanılabilirlik ile İlgili Anahtar Kriterler
+Öğrenilebilirlik (Learnability): Yeni başlayan bir kullanıcı sistemi ne kadar çabuk öğrenebilir?
+
+Hatırlanabilirlik (Memorability): Uzun süre kullanmayan bir kullanıcı, geri döndüğünde sistemi kolayca hatırlayabilir mi?
+
+Hata Yönetimi (Error Handling): Kullanıcılar hata yaparsa bu hataları nasıl ve ne kadar kolay düzeltebilirler?
+
+Erişilebilirlik (Accessibility): Farklı kullanıcı gruplarına (engelliler dahil) sistem ne kadar erişilebilir?
+
+🔧 Kullanılabilirliği Artıran Yöntemler
+Kullanıcı testleri (usability testing)
+
+Prototipleme ve geri bildirim alma
+
+Basit ve tutarlı arayüz tasarımı
+
+Kullanıcıların beklentilerine uygun navigasyon
+
+Örnek:
+Bir e-ticaret sitesinin arama fonksiyonu:
+
+Eğer kullanıcı ürün adını yazarken öneriler çıkıyorsa (autocomplete),
+
+Filtreleme sistemi hızlı ve anlaşılırsa,
+
+Hatalı yazılan kelimeleri otomatik düzeltebiliyorsa,
+
+➡️ Bu sistem yüksek kullanılabilirliğe sahiptir.
+
+
+🎯 Örnek: Online Bilet Satış Sistemi
+Diyelim ki bir kullanıcı, internetten bir tiyatro bileti almak istiyor ve bir web sitesine giriyor.
+
+🧩 Kullanılabilirlik Açısından Değerlendirme:
+Etkinlik (Effectiveness)
+Kullanıcı kolayca tiyatro bölümüne ulaşıyor, uygun tarihi seçiyor, koltuk seçiyor ve bileti satın alabiliyor.
+👉 Hedefe ulaşıldı mı? Evet.
+
+Verimlilik (Efficiency)
+Tüm işlem 2–3 dakika sürdü. Arayüz anlaşılır, işlemler hızlı.
+👉 Minimum çabayla sonuç alındı mı? Evet.
+
+Memnuniyet (Satisfaction)
+Sayfa gözü yormuyor, hata vermiyor, kullanıcı kendini güvende hissediyor (örneğin, "Ödeme başarılı!" bildirimi geliyor).
+👉 Kullanıcı memnun mu? Evet.
+
+Öğrenilebilirlik (Learnability)
+Kullanıcı ilk defa siteye girmesine rağmen "Bilet Al" butonunu hemen fark ediyor.
+👉 Kolay öğrenildi mi? Evet.
+
+Hatırlanabilirlik (Memorability)
+Kullanıcı bir ay sonra tekrar geldiğinde site yapısını hatırlıyor ve aynı işlemleri kolayca yapıyor.
+👉 Kolay hatırlanabiliyor mu? Evet.
+
+Hatalarla Başa Çıkma (Error Handling)
+Kullanıcı yanlışlıkla 3 bilet yerine 30 bilet seçerse, sistem uyarı veriyor: "Maksimum 10 bilet seçebilirsiniz."
+👉 Hatalar anlaşılır şekilde bildirildi mi? Evet.
